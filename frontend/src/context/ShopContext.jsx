@@ -19,12 +19,14 @@ const ShopContextProvider = (props) => {
   const navigate = useNavigate();
 
   const addToCart = async (itemId, size) => {
-    let cartData = structuredClone(cartItems);
+    
 
     if (!size) {
       toast.error("Select Product Size");
       return;
     }
+
+    let cartData = structuredClone(cartItems);
 
     if (cartData[itemId]) {
       if (cartData[itemId][size]) {
@@ -37,6 +39,20 @@ const ShopContextProvider = (props) => {
       cartData[itemId][size] = 1;
     }
     setCartItems(cartData);
+
+    if (token) {
+  
+      
+      try {
+        await axios.post(backendURL + '/api/cart/add/', { itemId, size}, { headers: {token} });
+        
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+        
+      }
+      
+    }
   };
 
   const getCartCount = () => {
