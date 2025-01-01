@@ -13,24 +13,24 @@ const Cart = () => {
 
 
 
-  useEffect(()=> {
-
-    const tempData = [];
-    for(const items in cartItems) {
-      for(const item in cartItems[items]){
-        if (cartItems[items][item] > 0) {
-          tempData.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item]
-          })   
+  useEffect(() => {
+    if (products.length > 0) {
+      const tempData = [];
+      for (const itemId in cartItems) {
+        for (const size in cartItems[itemId]) {
+          if (cartItems[itemId][size] > 0) {
+            tempData.push({
+              _id: itemId,
+              size: size,
+              quantity: cartItems[itemId][size],
+            });
+          }
         }
       }
+      setCartData(tempData);
     }
-    setCartData(tempData);
-
-  }, [cartItems]);
-
+  }, [cartItems, products]);
+  
 
 
   return (
@@ -58,7 +58,7 @@ const Cart = () => {
                     </div>
                   </div>
                 </div>
-                <input onChange={(event)=> event.target.value === '' || event.target.value === '0' ? null : updateQuantity(item._id, item.size, Number(event.target.value))}className='border max-w-10 sm:max-w-20 px-1 py-1' type="number" min={1} defaultValue={item.quantity}/>
+                <input onChange={(event)=> event.target.value === '' || event.target.value === '0' ? null : updateQuantity(item._id, item.size, Number(event.target.value))} className='border max-w-10 sm:max-w-20 px-1 py-1' type="number" min={1} defaultValue={item.quantity}/>
                 <img onClick={()=> updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer 'src={assets.bin_icon} />
 
               </div>

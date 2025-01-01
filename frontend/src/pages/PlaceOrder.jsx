@@ -6,10 +6,30 @@ import { ShopContext } from '../context/ShopContext';
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState('Cod');
+
+  const [formData, setFormData] = useState({
+    firstName:'',
+    lastName:'',
+    email:'',
+    street:'',
+    city:'',
+    zipcode:'',
+    state:'',
+    country:'',
+    phone:'',
+  });
+
+  const onChangeHandler = (event)=>{
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setFormData(data => ({...data, [name]:value}));
+  }
+
   const { navigate } = useContext(ShopContext);
 
   return (
-    <div className="flex flex-col sm:flex-row justify-between gap-4 py-5 sm:pt-14 min-h-[80vh] border-t">
+    <form className="flex flex-col sm:flex-row justify-between gap-4 py-5 sm:pt-14 min-h-[80vh] border-t">
       {/* Left Side - Delivery Information */}
       <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
         {/* Title */}
@@ -22,11 +42,17 @@ const PlaceOrder = () => {
           <input
             type="text"
             placeholder="First name"
+            onChange={onChangeHandler}
+            name="firstName"
+            value={formData.firstName}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
           <input
             type="text"
             placeholder="Last name"
+            onChange={onChangeHandler}
+            name="lastName"
+            value={formData.lastName}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
         </div>
@@ -35,6 +61,9 @@ const PlaceOrder = () => {
         <input
           type="email"
           placeholder="Email address"
+          onChange={onChangeHandler}
+          name="email"
+          value={formData.email}
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
         />
 
@@ -42,6 +71,9 @@ const PlaceOrder = () => {
         <input
           type="text"
           placeholder="Street"
+          onChange={onChangeHandler}
+          name="street"
+          value={formData.street}
           className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
         />
 
@@ -50,11 +82,17 @@ const PlaceOrder = () => {
           <input
             type="text"
             placeholder="City"
+            onChange={onChangeHandler}
+            name="city"
+            value={formData.city}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
           <input
             type="text"
             placeholder="State"
+            onChange={onChangeHandler}
+            name="state"
+            value={formData.state}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
         </div>
@@ -64,11 +102,17 @@ const PlaceOrder = () => {
           <input
             type="number"
             placeholder="Post/Zip code"
+            onChange={onChangeHandler}
+            name="zipcode"
+            value={formData.zipcode}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
           <input
             type="text"
             placeholder="Country"
+            onChange={onChangeHandler}
+            name="country"
+            value={formData.country}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
         </div>
@@ -78,6 +122,9 @@ const PlaceOrder = () => {
           <input
             type="number"
             placeholder="Phone"
+            onChange={onChangeHandler}
+            name="phone"
+            value={formData.phone}
             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
           />
         </div>
@@ -115,7 +162,7 @@ const PlaceOrder = () => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
