@@ -11,7 +11,7 @@ const BestSeller = () => {
         if (Array.isArray(products)) {
             const bestProduct = products.filter((item) => item.bestseller);
             setBestSeller(bestProduct.slice(0, 5));
-            console.log(bestProduct.slice(0, 5))
+            console.log(bestProduct.slice(0, 5));
         }
     }, [products]);
 
@@ -31,7 +31,7 @@ const BestSeller = () => {
                             key={item._id}
                             id={item._id}
                             name={item.name}
-                            image={item.image}
+                            image={item.images}
                             price={item.price}
                         />
                     ))
