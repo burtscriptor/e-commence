@@ -1,4 +1,5 @@
-import orderModel from "../models/orderModel.js"
+import orderModel from "../models/orderModel.js";
+import userModel from "../models/userModel.js";
 
 const placeOrder = async (request, response)=>{
     try {
@@ -42,6 +43,18 @@ const allOrders = async (request, response)=>{
 };
 
 const userOrders = async (request, response)=>{
+
+    try {
+        const { userId } = request.body;
+        const orders = await orderModel.findById({userId});
+
+        response.json({success:true, orders});
+
+    } catch (error) {
+        response.json({success:false, message: error.message});
+        console.log(error);
+        
+    }
 
 };
 

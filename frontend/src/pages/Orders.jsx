@@ -1,9 +1,34 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Orders = () => {
-  const { currency, products } = useContext(ShopContext);
+  const { currency, backendURL, token } = useContext(ShopContext);
+  const [orderData, setOrderData] = useState([]);
+
+  const loadOrderData = async()=> {
+    
+    try {
+      if(!token){
+        return null;
+      }
+      const response = await axios.post(backendURL + '/api/order/userorders', {}, {header: {token}});
+     
+      console.log(response.data);
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(response.data.message);
+      
+    }
+  }
+
+  useEffect(()=> {
+    loadOrderData();
+  
+  }, [token]);
 
   return (
     <div className='border-t pt-16'>
@@ -14,7 +39,7 @@ const Orders = () => {
 
       {/* Orders List */}
       <div>
-        {products.slice(1, 4).map((item, index) => (
+        {orderData.map((item, index) => (
           <div
             key={index}
             className='py-4 border-t border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4'
