@@ -46,7 +46,8 @@ const userOrders = async (request, response)=>{
 
     try {
         const { userId } = request.body;
-        const orders = await orderModel.findById({userId});
+        const orders = await orderModel.find({userId});
+        console.log(orders);
 
         response.json({success:true, orders});
 

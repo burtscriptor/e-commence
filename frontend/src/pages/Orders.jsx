@@ -8,13 +8,15 @@ const Orders = () => {
   const { currency, backendURL, token } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([]);
 
-  const loadOrderData = async()=> {
+  const loadOrderData = async(token)=> {
+    console.log(token)
     
     try {
       if(!token){
+        console.log('no token');
         return null;
       }
-      const response = await axios.post(backendURL + '/api/order/userorders', {}, {header: {token}});
+      const response = await axios.post(backendURL + '/api/order/userorders', {}, {headers: {token}});
      
       console.log(response.data);
       
@@ -26,7 +28,7 @@ const Orders = () => {
   }
 
   useEffect(()=> {
-    loadOrderData();
+    loadOrderData(token);
   
   }, [token]);
 

@@ -12,7 +12,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
 
   const onSubmitHandler = async (event) => {
-    console.log(currentState);
     event.preventDefault();
     try {
       if(currentState === 'Sign Up'){
