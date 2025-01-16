@@ -40,6 +40,16 @@ const placeOrderRazorpay = async (request, response)=>{
 
 const allOrders = async (request, response)=>{
 
+    try {
+        const orders = await orderModel.find({});
+        response.json({success: true, orders})
+        
+    } catch (error) {
+        response.json({success: false, message: error.message });
+        console.log(error);
+        
+    }
+
 };
 
 const userOrders = async (request, response)=>{

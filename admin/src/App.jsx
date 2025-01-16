@@ -17,7 +17,6 @@ const App = () => {
 
   useEffect(()=> {
     localStorage.setItem('token', token);
-    console.log(token)
 
   },[token])
 
