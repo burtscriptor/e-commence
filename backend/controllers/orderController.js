@@ -1,5 +1,14 @@
+import { MongoOperationTimeoutError } from "mongodb";
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+
+const currency = 'aud';
+const deliveryCharge = 10;
+
+import Stripe from 'stripe';
+import { currency } from "../../admin/src/App.jsx";
+
+const stripe = new Stripe(process.env.STRIPE_SECTET_KEY);
 
 const placeOrder = async (request, response)=>{
     try {
@@ -31,6 +40,51 @@ const placeOrder = async (request, response)=>{
 };
 
 const placeOrderStripe = async (request, response)=>{
+
+    try {
+        const {  userId, items, amount, address } = request.body;
+        const { origin } = request.headers;
+
+        const orderData = {
+            userId,
+            items,
+            address,
+            amount,
+            paymentMethod:"Stripe",
+            payment:false,
+            dat: Date.now()
+        }
+
+        const newOrder = new orderModel(orderData);
+        await newOrder.save();
+
+        const line_items = items.map((item)=>({
+            price_data: {
+                currency: currency,
+                product_data: {
+                    name:item.name
+                },
+                unit_amount: item.price * 100
+            },
+            quantity: item.quantity
+        }))
+
+        line_items.push({
+            price_data: {
+                currency: currency,
+                product_data: {
+                    name:'Delievery Charges'
+                },
+                unit_amount: deliveryCharge * 100
+            },
+            quantity: 1
+        })
+
+        const session = await stripe.checkout.sessions.create();
+
+    } catch (error) {
+        
+    }
 
 };
 
@@ -70,6 +124,19 @@ const userOrders = async (request, response)=>{
 };
 
 const updateStatus = async (request, response)=>{
+
+    try {
+        
+        const { orderId, status } = request.body;
+
+        await orderModel.findByIdAndUpdate(orderId, { status });
+
+        response.json({success:true, message: "Status Updated"})
+    } catch (error) {
+        response.json({success:false, message: error.message});
+        console.log(error);
+        
+    }
 
 };
 
