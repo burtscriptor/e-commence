@@ -56,8 +56,6 @@ const PlaceOrder = () => {
         amount: getCartAmount() + delivery_fee,
       }
 
-  
-      
       switch (method){
 
         // API Calls for COD
@@ -80,10 +78,20 @@ const PlaceOrder = () => {
             
           } else {
             toast.error(responseStripe.data.message);
-            console.log("s error");
           }
 
           break;
+
+          case 'razorpay':
+            console.log('razor');
+
+              const responseRazorpay = await axios.post(backendURL + '/api/order/razorpay', orderData, {headers: {token} });
+              if (responseRazorpay.data.success) {
+                console.log(responseRazorpay.data.order);
+
+              }
+
+            break;
 
         default:
           break;

@@ -2,6 +2,7 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
+import Razorpay from "razorpay";
 
 const currency = 'aud';
 const deliveryCharge = 10;
@@ -9,6 +10,10 @@ const deliveryCharge = 10;
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZOR_KEY_ID,
+    key_secret: process.env.RAZOR_KEY_SECRET
+});
 
 const placeOrder = async (request, response) => {
     try {
@@ -43,7 +48,7 @@ const placeOrderStripe = async (request, response) => {
 
     try {
         const { userId, items, amount, address } = request.body;
-        console.log(userId);
+      
         const { origin } = request.headers;
 
         const orderData = {
@@ -123,6 +128,44 @@ const verifyStripe = async (request, response) => {
 
 const placeOrderRazorpay = async (request, response) => {
 
+    console.log('razorpay');
+    try {
+        const { userId, items, amount, address } = request.body;
+
+        const orderData = {
+            userId,
+            items,
+            address,
+            amount,
+            paymentMethod: "Razorpay",
+            payment: false,
+            dat: Date.now()
+        }
+
+        const newOrder = new orderModel(orderData);
+        await newOrder.save();
+
+        const options ={
+            amount: amount * 100,
+            currency: currency.toUpperCase(),
+            receipt: newOrder._id.toString()
+        }
+
+        await razorpayInstance.orders.create(options, (error, order) => {
+            if(error) {
+                console.log(error);
+                return response.json({ success:false, message: error })
+            }
+            response.json({success: true, order})
+        
+        })
+
+    } catch (error) {
+        console.log(error);
+        response.json({ success: false, message: error.message });
+
+    }
+
 };
 
 const allOrders = async (request, response) => {
@@ -144,7 +187,7 @@ const userOrders = async (request, response) => {
     try {
         const { userId } = request.body;
         const orders = await orderModel.find({ userId });
-        console.log(orders);
+       
 
         response.json({ success: true, orders });
 
