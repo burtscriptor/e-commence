@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const Verify = () => {
 
-    const { navigate, token, setCartItems, backendUrl } = useContext(ShopContext);
+    const { navigate, token, setCartItems, backendURL } = useContext(ShopContext);
     const [ searchParams] = useSearchParams();
 
     const success = searchParams.get('success');
@@ -19,7 +19,7 @@ const Verify = () => {
                 return null;
             };
 
-            const response = await axios.post(backendUrl + '/api/order/verifyStripe', {success, orderId}, {headers: {token }});
+            const response = await axios.post(backendURL + '/api/order/verifyStripe', {success, orderId}, {headers: {token }});
             
             if (response.data.success) {
                 setCartItems({});
@@ -39,7 +39,7 @@ const Verify = () => {
     };
 
     useEffect(()=>{
-        verifyPayment(token);
+        verifyPayment();
     },[token]);
 
   return (
